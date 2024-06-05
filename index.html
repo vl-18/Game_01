@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0000FF;
+            background-color: #03dffc;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -15,7 +15,7 @@
         .container {
             max-width: 500px;
             margin: auto;
-            background: ##ADD8E6;
+            background: #03bafc;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -33,13 +33,13 @@
 </head>
 <body>
     <div class="container">
-        <h2>Birthday Quiz</h2>
+        <h2> Let's check the once best boy's memory </h2>
         <form id="quizForm">
-            <label for="q1">1. What is [Friend's Name]'s favorite color?</label><br>
+            <label for="q1">1. hamesha der kardeta hu, jaruri ____ ____ ____ ?</label><br>
             <input type="text" id="q1" name="q1"><br><br>
-            <label for="q2">2. What is [Friend's Name]'s birth month?</label><br>
+            <label for="q2">2. What's the best way to describe you? Acc to me ofc </label><br>
             <input type="text" id="q2" name="q2"><br><br>
-            <label for="q3">3. What is [Friend's Name]'s favorite food?</label><br>
+            <label for="q3">3. 21 18 2 1 4 1 20 6 15 15 19 2 1 12 12</label><br>
             <input type="text" id="q3" name="q3"><br><br>
             <input type="submit" value="Submit">
         </form>
@@ -50,9 +50,9 @@
         document.getElementById('quizForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const answers = {
-                q1: 'blue', // Replace with the correct answer
-                q2: 'june', // Replace with the correct answer
-                q3: 'sweets' // Replace with the correct answer
+                q1: 'baath kehani tho', // Replace with the correct answer
+                q2: 'dumb', // Replace with the correct answer
+                q3: 'u r bad at foosball' // Replace with the correct answer
             };
             const userAnswers = {
                 q1: document.getElementById('q1').value.toLowerCase(),
