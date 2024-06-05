@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Birthday Quiz</h2>
+        <form id="quizForm">
+            <label for="q1">1. What is [Friend's Name]'s favorite color?</label><br>
+            <input type="text" id="q1" name="q1"><br><br>
+            <label for="q2">2. What is [Friend's Name]'s birth month?</label><br>
+            <input type="text" id="q2" name="q2"><br><br>
+            <label for="q3">3. What is [Friend's Name]'s favorite food?</label><br>
+            <input type="text" id="q3" name="q3"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <p id="message" style="color:red;"></p>
+    </div>
+
+    <script>
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const answers = {
+                q1: 'blue', // Replace with the correct answer
+                q2: 'june', // Replace with the correct answer
+                q3: 'sweets' // Replace with the correct answer
+            };
+            const userAnswers = {
+                q1: document.getElementById('q1').value.toLowerCase(),
+                q2: document.getElementById('q2').value.toLowerCase(),
+                q3: document.getElementById('q3').value.toLowerCase()
+            };
+            if (userAnswers.q1 === answers.q1 && userAnswers.q2 === answers.q2 && userAnswers.q3 === answers.q3) {
+                window.location.href = 'puzzle.html';
+            } else {
+                document.getElementById('message').textContent = 'One or more answers are incorrect. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>
