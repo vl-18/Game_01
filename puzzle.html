@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #puzzle-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 2px;
+        }
+        .piece {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        #message {
+            text-align: center;
+            font-size: 24px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Solve the Puzzle!</h2>
+        <div id="puzzle-container"></div>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const pieces = [];
+        const correctPositions = [];
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                const id = i * 4 + j + 1;
+                pieces.push({ id, left: j * 100, top: i * 100 });
+                correctPositions.push({ id, left: j * 100, top: i * 100 });
+            }
+        }
+
+        function createPuzzle() {
+            const puzzleContainer = document.getElementById('puzzle-container');
+            puzzleContainer.innerHTML = '';
+            pieces.forEach(piece => {
+                const img = document.createElement('img');
+                img.src = `pieces/piece${piece.id}.jpg`; // Ensure your image pieces are named piece1.jpg, piece2.jpg, ..., piece16.jpg
+                img.style.left = `${piece.left}px`;
+                img.style.top = `${piece.top}px`;
+                img.classList.add('piece');
+                img.draggable = true;
+                img.ondragstart = function(event) {
+                    event.dataTransfer.setData('text/plain', piece.id);
+                };
+                puzzleContainer.appendChild(img);
+            });
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const pieceId = event.dataTransfer.getData('text/plain');
+            const piece = pieces.find(p => p.id == pieceId);
+            const rect = event.target.getBoundingClientRect();
+            piece.left = event.clientX - rect.left - 50;
+            piece.top = event.clientY - rect.top - 50;
+            createPuzzle();
+            checkSolution();
+        }
+
+        function checkSolution() {
+            const isSolved = pieces.every((piece, index) => {
+                return piece.left === correctPositions[index].left && piece.top === correctPositions[index].top;
+            });
+            if (isSolved) {
+                document.getElementById('message').textContent = 'Happy Birthday! You solved the puzzle!';
+            }
+        }
+
+        document.getElementById('puzzle-container').ondrop = drop;
+        document.getElementById('puzzle-container').ondragover = allowDrop;
+        createPuzzle();
+    </script>
+</body>
+</html>
