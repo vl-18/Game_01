@@ -35,6 +35,7 @@
             border: 1px solid #ccc;
             cursor: pointer;
             box-sizing: border-box;
+            position: absolute;
         }
         #message {
             text-align: center;
@@ -68,14 +69,13 @@
             shuffledPieces.forEach(piece => {
                 const img = document.createElement('img');
                 img.src = `pieces/piece${piece.id}.jpg`; // Place the images in a folder named "pieces"
-                img.style.position = 'absolute';
                 img.style.left = `${piece.left}px`;
                 img.style.top = `${piece.top}px`;
                 img.classList.add('piece');
                 img.draggable = true;
-                img.ondragstart = function(event) {
-                    event.dataTransfer.setData('text/plain', piece.id);
-                };
+                img.ondragstart = dragStart;
+                img.ondragover = allowDrop;
+                img.ondrop = drop;
                 puzzleContainer.appendChild(img);
             });
         }
@@ -92,12 +92,16 @@
             event.preventDefault();
         }
 
+        function dragStart(event) {
+            event.dataTransfer.setData('text/plain', event.target.src);
+        }
+
         function drop(event) {
             event.preventDefault();
-            const pieceId = event.dataTransfer.getData('text/plain');
             const target = event.target;
+            const src = event.dataTransfer.getData('text/plain');
+            const piece = document.querySelector(`img[src='${src}']`);
             if (target.classList.contains('piece')) {
-                const piece = document.querySelector(`img[src='pieces/piece${pieceId}.jpg']`);
                 const tempLeft = piece.style.left;
                 const tempTop = piece.style.top;
                 piece.style.left = target.style.left;
@@ -125,8 +129,6 @@
             }
         }
 
-        document.getElementById('puzzle-container').ondrop = drop;
-        document.getElementById('puzzle-container').ondragover = allowDrop;
         createPuzzle();
     </script>
 </body>
