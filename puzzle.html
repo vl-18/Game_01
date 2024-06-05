@@ -52,75 +52,76 @@
     </div>
 
     <script>
-        const correctPositions = [];
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
-                const id = i * 4 + j + 1;
-                correctPositions.push({ id, left: j * 100, top: i * 100 });
-            }
-        }
-
         function createPuzzle() {
             const puzzleContainer = document.getElementById('puzzle-container');
             puzzleContainer.innerHTML = '';
 
-            const shuffledPieces = shuffleArray([...correctPositions]);
-
-            shuffledPieces.forEach(piece => {
-                const img = document.createElement('img');
-                img.src = `pieces/piece${piece.id}.jpg`; // Place the images in a folder named "pieces"
-                img.style.left = `${piece.left}px`;
-                img.style.top = `${piece.top}px`;
-                img.classList.add('piece');
-                img.draggable = true;
-                img.addEventListener('dragstart', dragStart);
-                img.addEventListener('dragover', allowDrop);
-                img.addEventListener('drop', drop);
-                puzzleContainer.appendChild(img);
-            });
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+            for (let i = 0; i < 16; i++) {
+                const piece = document.createElement('img');
+                piece.src = `pieces/piece${i + 1}.jpg`; // Place the images in a folder named "pieces"
+                piece.style.left = `${(i % 4) * 100}px`;
+                piece.style.top = `${Math.floor(i / 4) * 100}px`;
+                piece.classList.add('piece');
+                piece.id = `piece${i + 1}`;
+                piece.draggable = true;
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('dragover', dragOver);
+                piece.addEventListener('dragenter', dragEnter);
+                piece.addEventListener('dragleave', dragLeave);
+                piece.addEventListener('drop', drop);
+                piece.addEventListener('dragend', dragEnd);
+                puzzleContainer.appendChild(piece);
             }
-            return array;
-        }
-
-        function allowDrop(event) {
-            event.preventDefault();
         }
 
         function dragStart(event) {
-            event.dataTransfer.setData('text/plain', event.target.src);
+            event.dataTransfer.setData('text/plain', event.target.id);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        function dragEnter(event) {
+            event.preventDefault();
+            if (event.target.classList.contains('piece')) {
+                event.target.classList.add('hovered');
+            }
+        }
+
+        function dragLeave(event) {
+            if (event.target.classList.contains('piece')) {
+                event.target.classList.remove('hovered');
+            }
         }
 
         function drop(event) {
             event.preventDefault();
-            const target = event.target;
-            const src = event.dataTransfer.getData('text/plain');
-            const piece = document.querySelector(`img[src='${src}']`);
-            if (target.classList.contains('piece')) {
-                const tempLeft = piece.style.left;
-                const tempTop = piece.style.top;
-                piece.style.left = target.style.left;
-                piece.style.top = target.style.top;
-                target.style.left = tempLeft;
-                target.style.top = tempTop;
-                checkSolution();
-            }
+            const pieceId = event.dataTransfer.getData('text/plain');
+            const piece = document.getElementById(pieceId);
+            piece.style.left = `${event.target.offsetLeft}px`;
+            piece.style.top = `${event.target.offsetTop}px`;
+            event.target.appendChild(piece);
+            event.target.classList.remove('hovered');
+            checkSolution();
+        }
+
+        function dragEnd(event) {
+            const pieces = document.querySelectorAll('.piece');
+            pieces.forEach(piece => {
+                piece.classList.remove('hovered');
+            });
         }
 
         function checkSolution() {
             const pieces = document.querySelectorAll('.piece');
             let isSolved = true;
             pieces.forEach(piece => {
-                const id = parseInt(piece.src.match(/piece(\d+)\.jpg$/)[1]);
-                const correctPosition = correctPositions.find(pos => pos.id === id);
+                const expectedLeft = (parseInt(piece.id.substr(5)) - 1) % 4 * 100;
+                const expectedTop = Math.floor((parseInt(piece.id.substr(5)) - 1) / 4) * 100;
                 const currentLeft = parseInt(piece.style.left);
                 const currentTop = parseInt(piece.style.top);
-                if (correctPosition.left !== currentLeft || correctPosition.top !== currentTop) {
+                if (expectedLeft !== currentLeft || expectedTop !== currentTop) {
                     isSolved = false;
                 }
             });
