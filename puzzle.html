@@ -73,9 +73,9 @@
                 img.style.top = `${piece.top}px`;
                 img.classList.add('piece');
                 img.draggable = true;
-                img.ondragstart = dragStart;
-                img.ondragover = allowDrop;
-                img.ondrop = drop;
+                img.addEventListener('dragstart', dragStart);
+                img.addEventListener('dragover', allowDrop);
+                img.addEventListener('drop', drop);
                 puzzleContainer.appendChild(img);
             });
         }
@@ -133,3 +133,4 @@
     </script>
 </body>
 </html>
+
