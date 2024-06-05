@@ -75,6 +75,9 @@
                 piece.addEventListener('dragend', dragEnd);
                 puzzleContainer.appendChild(piece);
             }
+
+            puzzleContainer.addEventListener('dragover', dragOver);
+            puzzleContainer.addEventListener('drop', drop);
         }
 
         function dragStart(event) {
