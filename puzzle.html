@@ -42,6 +42,9 @@
             font-size: 24px;
             color: green;
         }
+        .hovered {
+            border: 2px dashed #000;
+        }
     </style>
 </head>
 <body>
@@ -97,12 +100,26 @@
 
         function drop(event) {
             event.preventDefault();
-            const pieceId = event.dataTransfer.getData('text/plain');
-            const piece = document.getElementById(pieceId);
-            piece.style.left = `${event.target.offsetLeft}px`;
-            piece.style.top = `${event.target.offsetTop}px`;
-            event.target.appendChild(piece);
-            event.target.classList.remove('hovered');
+            const droppedPieceId = event.dataTransfer.getData('text/plain');
+            const droppedPiece = document.getElementById(droppedPieceId);
+            const target = event.target.closest('.piece');
+            
+            if (target) {
+                const tempLeft = droppedPiece.style.left;
+                const tempTop = droppedPiece.style.top;
+                droppedPiece.style.left = target.style.left;
+                droppedPiece.style.top = target.style.top;
+                target.style.left = tempLeft;
+                target.style.top = tempTop;
+            }
+            else {
+                // If dropped outside valid drop target, retain original position
+                const mouseX = event.clientX - event.target.offsetLeft - droppedPiece.clientWidth / 2;
+                const mouseY = event.clientY - event.target.offsetTop - droppedPiece.clientHeight / 2;
+                droppedPiece.style.left = `${mouseX}px`;
+                droppedPiece.style.top = `${mouseY}px`;
+            }
+
             checkSolution();
         }
 
@@ -134,4 +151,3 @@
     </script>
 </body>
 </html>
-
